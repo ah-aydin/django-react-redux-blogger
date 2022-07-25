@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from .token import generate_token
+from .token import token_generator
 from ..models import User
 
 import threading
@@ -26,7 +26,7 @@ def send_activation_email(request, user: User):
         'domain': current_site.domain,
         'activation_url': settings.USERS['ACTIVATION_URL'],
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': generate_token.make_token(user)
+        'token': token_generator.make_token(user)
     })
     
     email_message = EmailMessage(

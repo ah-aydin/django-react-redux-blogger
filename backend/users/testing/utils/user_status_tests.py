@@ -4,7 +4,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from users.models import User
 from users.utils.user_status import activate_user
-from users.utils.token import generate_token
+from users.utils.token import token_generator
 
 class UtilsUserStatusTest(TestCase):
     def setUp(self):
@@ -12,7 +12,7 @@ class UtilsUserStatusTest(TestCase):
     
     def test_activate_user_correct_data(self):
         uid = urlsafe_base64_encode(force_bytes(self.user.pk))
-        token = generate_token.make_token(self.user)
+        token = token_generator.make_token(self.user)
         
         is_activated = activate_user(uid, token)
         

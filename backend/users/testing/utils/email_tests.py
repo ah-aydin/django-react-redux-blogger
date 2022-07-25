@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from users.models import User
 from users.utils import email
-from users.utils.token import generate_token
+from users.utils.token import token_generator
 
 class UtilsEmailTest(TestCase):
     def setUp(self):
@@ -19,7 +19,7 @@ class UtilsEmailTest(TestCase):
     
     def test_send_activation_email(self):
         uid = urlsafe_base64_encode(force_bytes(self.user.pk))
-        token = generate_token.make_token(self.user)
+        token = token_generator.make_token(self.user)
         request = self.factory.post(reverse('user-activate', kwargs={'uidb64': uid, 'token': token}))
         current_site = get_current_site(request)
         

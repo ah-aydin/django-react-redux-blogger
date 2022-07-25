@@ -1,10 +1,7 @@
 {% autoescape off%}
 
-Hi {{user.username}}
-please click this link below to verify your account
+Hello there {{user.username}},
 
-http://{{domain}}{{activation_url}}/{{uid}}/{{token}}
-
-
+Please click this link to verify your account: http://{{domain}}{{activation_url}}/{{uid}}/{{token}}
 
 {% endautoescape %}

@@ -1,7 +1,7 @@
 from django.utils.encoding import smart_str
 from django.utils.http import urlsafe_base64_decode
 
-from .token import generate_token
+from .token import token_generator
 from ..models import User
 
 def activate_user(uidb64, token) -> bool:
@@ -10,7 +10,7 @@ def activate_user(uidb64, token) -> bool:
         user = User.objects.get(pk=uid)
     except User.DoesNotExist:
         return False
-    if generate_token.check_token(user, token):
+    if token_generator.check_token(user, token):
         user.is_active = True
         user.save()
         return True
