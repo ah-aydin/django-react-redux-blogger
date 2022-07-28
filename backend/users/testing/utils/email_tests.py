@@ -20,7 +20,7 @@ class UtilsEmailTest(TestCase):
     def test_send_activation_email(self):
         uid = urlsafe_base64_encode(force_bytes(self.user.pk))
         token = token_generator.make_token(self.user)
-        request = self.factory.post(reverse('user-activate', kwargs={'uidb64': uid, 'token': token}))
+        request = self.factory.post(reverse('user-activate', kwargs={'uid64': uid, 'token': token}))
         current_site = get_current_site(request)
         
         thread = email.send_activation_email(request, self.user)
@@ -37,3 +37,28 @@ class UtilsEmailTest(TestCase):
         
         self.assertEqual(mail.outbox[-1].subject, expected_subject)
         self.assertEqual(mail.outbox[-1].body, expected_body)
+    
+    def test_send_password_reset_email(self):
+        uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        token = token_generator.make_token(self.user)
+        request = self.factory.post(
+            reverse('user-reset-password', kwargs={'uid64': uid, 'token': token}),
+            data={'password': 'new password', 're_password': 'new password'}
+        )
+        current_site = get_current_site(request)
+        
+        thread = email.send_password_reset_email(request, self.user.email)
+      
+        expected_subject = 'Reset your password'
+        expected_body = render_to_string('users/email/password_reset.html', {
+            'user': self.user,
+            'domain': current_site.domain,
+            'password_reset_url': settings.USERS['PASSWORD_RESET_URL'],
+            'uid': urlsafe_base64_encode(force_bytes(self.user.pk)),
+            'token': token_generator.make_token(self.user)
+        })
+        thread.join()
+        
+        self.assertEqual(mail.outbox[-1].subject, expected_subject)
+        self.assertEqual(mail.outbox[-1].body, expected_body)
+        

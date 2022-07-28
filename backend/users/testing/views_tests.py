@@ -9,7 +9,7 @@ class UserListTests(APITestCase):
     def setUp(self):
         self.url = reverse('user-list')
     
-    def tset_get_users(self):
+    def test_get_users(self):
         user = User.objects.create_user('dummy@gmail.com', 'dummy', 'password')
         response = self.client.get(self.url)
         response_user = response.data['results'][0]

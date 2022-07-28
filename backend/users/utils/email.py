@@ -39,5 +39,28 @@ def send_activation_email(request, user: User):
     thread.start()
     return thread
 
-def send_password_reset_email(request, user: User):
-    pass
+def send_password_reset_email(request, email: str):
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        raise User.DoesNotExist()
+    
+    current_site = get_current_site(request)
+    email_subject = 'Reset your password'
+    message = render_to_string('users/email/password_reset.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'password_reset_url': settings.USERS['PASSWORD_RESET_URL'],
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': token_generator.make_token(user)
+    })
+    
+    email_message = EmailMessage(
+        email_subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [user.email]
+    )
+    thread = EmailThread(email_message)
+    thread.start()
+    return thread
