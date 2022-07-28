@@ -1,12 +1,14 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, filters, status
 from rest_framework.response import Response
+import json
 
 from .models import User
 from .serializers import UserCreateSerializer, UserSerializer, UserCreateResponseSerializer
-from .utils.user_status import activate_user
-from .utils.email import send_activation_email
+from .utils.user_status import activate_user, reset_password
+from .utils.email import send_activation_email, send_password_reset_email
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.fetchAll(User)
@@ -51,16 +53,39 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.fetchAll(User)
     serializer_class = UserSerializer
 
-@require_http_methods(['POST'])
-def activateUser(request, uidb64, token):
-    if activate_user(uidb64, token):
-        return JsonResponse({"activated": True})
-    return JsonResponse({"activated": False})
+@require_http_methods(['GET'])
+def activateUser(request, uid64, token):
+    if activate_user(uid64, token):
+        return JsonResponse({"successfull": True})
+    return JsonResponse({"successfull": False})
 
+@csrf_exempt
 @require_http_methods(['POST'])
 def requestResetPassword(request):
-    pass
+    try:
+        JSON = json.loads(request.body)
+    except:
+        return JsonResponse({"successfull": False})
+    
+    email = JSON['email']
+    try:
+        send_password_reset_email(request, email)
+        return JsonResponse({"successfull": True})
+    except:
+        return JsonResponse({"successfull": False})
 
+@csrf_exempt
 @require_http_methods(['POST'])
-def reasetPassword(request, uidb64, token):
-    pass
+def resetPassword(request, uid64, token):
+    try:
+        JSON = json.loads(request.body)
+    except:
+        return JsonResponse({"successfull": False})
+    
+    password = JSON['password']
+    re_password = JSON['re_password']
+    if password != re_password:
+        return JsonResponse({"error": "Passwords do not match"})
+    if reset_password(uid64, token, password):
+        return JsonResponse({"successfull": True})
+    return JsonResponse({"successfull": False})
