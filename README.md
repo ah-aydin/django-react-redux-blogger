@@ -6,7 +6,7 @@ Blog application made using django python and react-redux
 First create a python virtual environment and install dependencies
 
 ```
-pip install django djangorestframework django-filter djangorestframework_simplejwt python-dotenv django-cors-headers
+pip install django djangorestframework django-filter djangorestframework_simplejwt python-dotenv django-cors-headers six Pillow
 ```
 
 Create database
