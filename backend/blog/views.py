@@ -1,4 +1,5 @@
 from rest_framework import filters, generics, permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import Blog, Comment
 from .permissions import IsOwnerOrReadOnly, ReadOnly
@@ -12,6 +13,7 @@ class BlogList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    parser_classes = (MultiPartParser, FormParser)
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'body', 'author__email', 'author__username']
 
@@ -24,6 +26,7 @@ class BlogDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
 class BlogCommentList(generics.ListCreateAPIView):
     """

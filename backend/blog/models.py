@@ -1,10 +1,14 @@
 from django.db import models
 from django.conf import settings
 
+def upload_to(instance, filename):
+    return f'images/{filename}'
+
 class Blog(models.Model):
     title           = models.CharField(max_length=255, unique=True)
     author          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     body            = models.TextField()
+    title_image_url = models.ImageField(upload_to=upload_to, blank=True, null=True)
     
     # Information about the blog
     date_created    = models.DateField(auto_now_add=True)

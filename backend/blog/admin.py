@@ -8,7 +8,7 @@ class BlogAdmin(admin.ModelAdmin):
     readonly_fields = ('date_created', 'date_modified')
     fieldsets = (
         ('Blog', {
-            'fields': ('title', 'author', 'body'),
+            'fields': ('title', 'title_image_url', 'author', 'body'),
         }),
         ('Object information', {
             'fields': ('date_created', 'date_modified')

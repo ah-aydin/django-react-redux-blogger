@@ -176,7 +176,6 @@ SIMPLE_JWT = {
 }
 
 # Users
-
 USERS = {
     'ACTIVATION_URL': '/activate/:uid/:token/',
     'PASSWORD_RESET_URL': '/password_reset/:uid/:token/'
@@ -189,3 +188,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('HOST_EMAIL')
 EMAIL_HOST_PASSWORD = os.getenv('HOST_EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
+
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+MEDIA_URL = '/media/'
