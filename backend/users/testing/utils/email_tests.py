@@ -29,9 +29,7 @@ class UtilsEmailTest(TestCase):
         expected_body = render_to_string('users/email/activate.html', {
             'user': self.user,
             'domain': current_site.domain,
-            'activation_url': settings.USERS['ACTIVATION_URL'],
-            'uid': uid,
-            'token': token
+            'activation_url': settings.USERS['ACTIVATION_URL'].replace(':uid', uid).replace(':token', token)
         })
         thread.join()
         
@@ -53,9 +51,7 @@ class UtilsEmailTest(TestCase):
         expected_body = render_to_string('users/email/password_reset.html', {
             'user': self.user,
             'domain': current_site.domain,
-            'password_reset_url': settings.USERS['PASSWORD_RESET_URL'],
-            'uid': urlsafe_base64_encode(force_bytes(self.user.pk)),
-            'token': token_generator.make_token(self.user)
+            'password_reset_url': settings.USERS['PASSWORD_RESET_URL'].replace(':uid', uid).replace(':token', token)
         })
         thread.join()
         

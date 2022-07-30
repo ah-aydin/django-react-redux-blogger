@@ -17,3 +17,5 @@ class UserAdmin(admin.ModelAdmin):
             'fields': ('is_active', 'is_staff', 'is_admin'),
         })
     )
+    
+admin.site.register(models.Follow)

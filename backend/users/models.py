@@ -72,4 +72,14 @@ class User(AbstractBaseUser):
     
     def fetchUserByUsername(self, username:str):
         return self.objects.get(username=username)
+
+class Follow(models.Model):
+    follower    = models.ForeignKey(User, related_name='follows', null=False, editable=False, on_delete=models.CASCADE)
+    follows     = models.ForeignKey(User, related_name='followers', null=False, editable=False, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f'{self.follower} follows {self.follows}'
+
+    class Meta:
+        unique_together = ('follower', 'follows',)
     

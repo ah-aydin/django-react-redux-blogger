@@ -22,7 +22,7 @@ def send_activation_email(request, user: User):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = token_generator.make_token(user)
     
-    activation_url = settings.USER['ACTIVATION_URL'].replace(':uid', uid).replace(':token', token)
+    activation_url = settings.USERS['ACTIVATION_URL'].replace(':uid', uid).replace(':token', token)
     
     current_site = get_current_site(request)
     email_subject = 'Activate your blogger account'
