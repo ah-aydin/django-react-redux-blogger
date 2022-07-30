@@ -10,5 +10,6 @@ urlpatterns = [
     path('auth/tokens/refresh/', TokenRefreshView.as_view(), name='auth-tokens-refresh'),
 
     # API
-    path('api/user/', include('users.urls'))
+    path('api/user/', include('users.urls')),
+    path('api/blog/', include('blog.urls')),
 ]
