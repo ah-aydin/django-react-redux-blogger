@@ -178,8 +178,8 @@ SIMPLE_JWT = {
 # Users
 
 USERS = {
-    'ACTIVATION_URL': '/activate/',
-    'PASSWORD_RESET_URL': '/password_reset/'
+    'ACTIVATION_URL': '/activate/:uid/:token/',
+    'PASSWORD_RESET_URL': '/password_reset/:uid/:token/'
 }
 
 # Email
